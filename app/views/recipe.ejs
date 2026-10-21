@@ -1,0 +1,11 @@
+<%- include('partials/header') %>
+<article>
+  <span class="tag"><%= recipe.category %></span>
+  <h1><%= recipe.title %></h1>
+  <p><%= recipe.description %></p>
+  <h2>Nguyên liệu</h2>
+  <ul><% ingredients.forEach(i => { %><li><%= i.name %> — <%= i.quantity %></li><% }) %></ul>
+  <h2>Cách làm</h2>
+  <p class="pre"><%= recipe.instructions %></p>
+</article>
+<%- include('partials/footer') %>

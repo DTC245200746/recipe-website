@@ -1,0 +1,12 @@
+body{font-family:system-ui,sans-serif;margin:0;background:#fafafa;color:#222}
+header{display:flex;justify-content:space-between;padding:1rem 2rem;background:#e8590c}
+header a{color:#fff;text-decoration:none;font-weight:600}
+main{max-width:900px;margin:2rem auto;padding:0 1rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1rem}
+.card{background:#fff;padding:1rem;border-radius:8px;box-shadow:0 1px 4px #0002;text-decoration:none;color:inherit}
+.tag{background:#ffe8cc;padding:2px 8px;border-radius:12px;font-size:.8rem}
+.search,.form{display:flex;gap:.5rem;margin-bottom:1.5rem;flex-wrap:wrap}
+.form{flex-direction:column}
+input,select,textarea,button{padding:.6rem;font:inherit}
+button{background:#e8590c;color:#fff;border:0;border-radius:4px;cursor:pointer}
+.pre{white-space:pre-wrap}

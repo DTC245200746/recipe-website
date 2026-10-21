@@ -1,0 +1,21 @@
+<%- include('partials/header') %>
+<form method="get" class="search">
+  <input name="q" value="<%= q %>" placeholder="Tìm món ăn...">
+  <select name="category">
+    <option value="">Tất cả danh mục</option>
+    <% categories.forEach(c => { %>
+      <option value="<%= c.id %>" <%= String(c.id) === String(category) ? 'selected' : '' %>><%= c.name %></option>
+    <% }) %>
+  </select>
+  <button>Tìm</button>
+</form>
+<div class="grid">
+<% recipes.forEach(r => { %>
+  <a class="card" href="/recipes/<%= r.id %>">
+    <span class="tag"><%= r.category %></span>
+    <h3><%= r.title %></h3>
+    <p><%= r.description %></p>
+  </a>
+<% }) %>
+</div>
+<%- include('partials/footer') %>

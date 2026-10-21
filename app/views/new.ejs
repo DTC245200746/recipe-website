@@ -1,0 +1,13 @@
+<%- include('partials/header') %>
+<h1>Thêm công thức</h1>
+<form method="post" action="/recipes" class="form">
+  <input name="title" placeholder="Tên món" required>
+  <textarea name="description" placeholder="Mô tả ngắn"></textarea>
+  <select name="category_id" required>
+    <% categories.forEach(c => { %><option value="<%= c.id %>"><%= c.name %></option><% }) %>
+  </select>
+  <textarea name="ingredients" rows="5" placeholder="Mỗi dòng 1 nguyên liệu: Tên | Số lượng"></textarea>
+  <textarea name="instructions" rows="6" placeholder="Các bước thực hiện" required></textarea>
+  <button>Lưu</button>
+</form>
+<%- include('partials/footer') %>
