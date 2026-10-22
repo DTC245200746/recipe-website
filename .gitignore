@@ -2,3 +2,4 @@
 node_modules/
 nginx/certs/*.key
 nginx/certs/*.crt
+monitoring/mysqld-exporter/.my.cnf
