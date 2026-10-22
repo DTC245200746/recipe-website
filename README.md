@@ -40,3 +40,38 @@ từ `monitoring/grafana/`.
 
 ### Mạng Docker
 `frontend` (nginx, app) · `backend` (app, db, phpmyadmin, mysqld-exporter) · `monitoring` (nginx, exporters, prometheus, grafana).
+
+## Log tập trung (Loki + Promtail)
+
+Promtail đọc log của mọi container trong project qua Docker API (gắn nhãn `service`, `container`),
+đẩy về Loki (lưu 7 ngày). Xem log tại Grafana → Explore → datasource Loki, hoặc dashboard
+`Recipe Website - Logs`. Lưu ý: Promtail đã EOL từ 03/2026 (thay thế bởi Grafana Alloy), đề bài yêu cầu Promtail
+nên dùng bản cuối 3.6.0.
+
+Ví dụ LogQL:
+
+    {service="nginx"}
+    {service="app"} |= "ERROR"
+    {service="nginx"} | pattern `<ip> - [<_>] "<method> <uri> <_>" <status> <size> "<agent>" rt=<rt>` | status >= 400
+
+## Hardening
+
+| Nhóm | Biện pháp |
+|---|---|
+| Container | `no-new-privileges`, `cap_drop: ALL`, `read_only` (app, nginx, exporters), giới hạn mem/cpu/pids, xoay vòng log |
+| Non-root | app (`USER node`), prometheus, grafana, loki, exporters chạy user thường; MySQL hạ quyền về `mysql` |
+| Mạng | `frontend` và `backend` là `internal` (không ra Internet); `edge` chỉ nginx; `admin` chỉ phpMyAdmin; DB không publish port |
+| Database | Xóa `root@%`; `recipe_user` chỉ `SELECT/INSERT/UPDATE/DELETE` trên DB `recipes`; `exporter` chỉ quyền đọc metrics |
+| Nginx | HTTPS, security headers, rate limit (429), chỉ GET/HEAD/POST (405), chặn file ẩn, timeout chống slowloris, ẩn `X-Powered-By` |
+| Bí mật | Mật khẩu ngẫu nhiên 32 ký tự, `.env` quyền 600, không commit secret |
+
+Rủi ro chấp nhận: cAdvisor chạy `privileged` (đọc cgroup host) và Promtail mount `docker.sock` (đọc log container).
+Hướng khắc phục production: dùng docker-socket-proxy, thay Promtail bằng Grafana Alloy.
+
+### Chạy lần đầu trên máy mới (thứ tự đầy đủ)
+    cp .env.example .env
+    ./scripts/gen-cert.sh
+    docker compose up -d db
+    ./scripts/setup-monitoring.sh
+    ./scripts/harden-db.sh
+    docker compose up -d --build

@@ -3,6 +3,7 @@ const path = require('path');
 const pool = require('./db');
 
 const app = express();
+app.disable('x-powered-by');
 const wrap = fn => (req, res, next) => fn(req, res, next).catch(next);
 
 app.set('view engine', 'ejs');
